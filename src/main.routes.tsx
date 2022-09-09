@@ -1,8 +1,9 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./page/Home";
 import CreateGame from "./page/CreateGame";
 import CreateAccount from "./page/CreateAccount";
 import Login from "./page/Login";
+import Pagina404 from "./page/Pagina404";
 import ProtectedRouter from "./components/ProtectedRouter";
 import { GlobalStateProvider } from "./context/GlobalContext";
 
@@ -38,6 +39,15 @@ const MainRoutes = () => {
             </ProtectedRouter>
           }
         />
+        <Route
+          path={"/create-game"}
+          element={
+            <ProtectedRouter>
+              <CreateGame />
+            </ProtectedRouter>
+          }
+        />
+        <Route path="*" element={<Pagina404 />} />
       </Routes>
     </GlobalStateProvider>
   );
