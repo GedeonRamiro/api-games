@@ -2,11 +2,12 @@ import { formatReal } from "../utils/formatReal";
 import { Link } from "react-router-dom";
 import { memo, useState } from "react";
 import ModalComponent from "./ModalComponent";
-import { Table } from "flowbite-react";
+import { urlApi } from "../services/api";
 
 type Game = {
   createdAt: string;
   id: number;
+  image: string;
   name: string;
   price: number;
   updatedAt: string;
@@ -36,6 +37,13 @@ const TableGames = memo(({ game, deleteGame }: Props) => {
   return (
     <>
       <tr className="bg-white border-b ">
+        <th className="py-4 px-6">
+          <img
+            className="w-10 h-10  rounded-full object-cover"
+            src={`${urlApi}/image/${game.image}`}
+            alt={game.name}
+          />
+        </th>
         <th
           scope="row"
           className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"

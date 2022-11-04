@@ -1,11 +1,13 @@
 import axios from "axios";
 
+export const urlApi = "http://localhost:8080";
+
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: urlApi,
 });
 
 export const apiWithAuth = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: urlApi,
 });
 
 apiWithAuth.interceptors.request.use(function (config: any) {

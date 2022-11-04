@@ -12,6 +12,7 @@ import InputSearchTerm from "../components/InputSearchTerm";
 type Game = {
   createdAt: string;
   id: number;
+  image: string;
   name: string;
   price: number;
   updatedAt: string;
@@ -65,7 +66,6 @@ const Home = () => {
     try {
       const result = await apiWithAuth.delete(`/game/${id}`);
       toast.success(result.data.message, { position: "top-center" });
-      console.log(pagination?.page);
 
       getGamePage(pagination?.next ? pagination?.page : 1);
     } catch (error: any) {
@@ -124,6 +124,9 @@ const Home = () => {
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
+                <th scope="col" className="py-3 px-6">
+                  Avatar
+                </th>
                 <th scope="col" className="py-3 px-6">
                   Nome
                 </th>

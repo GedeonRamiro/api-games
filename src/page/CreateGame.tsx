@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 type Game = {
   createdAt: string;
   id: number;
+  image: string;
   name: string;
   price: number;
   updatedAt: string;
@@ -18,18 +19,35 @@ const CreateGame = () => {
   const location = useLocation();
   const gameState = location.state as Game;
 
+  const [file, setFile] = useState();
+  const [image, setImage] = useState(gameState ? gameState.image : "");
   const [name, setName] = useState(gameState ? gameState.name : "");
   const [year, setYear] = useState(gameState ? gameState.year : "");
   const [price, setPrice] = useState(gameState ? gameState.price : "");
   const [loading, setLoading] = useState(false);
 
+  const upImage = (e: any) => {
+    if (!e.target.files[0]) {
+      return setImage(image);
+    }
+    setImage(e.target.files[0]);
+    setFile(e.target.files[0]);
+  };
+
   const createGame = async () => {
     setLoading(true);
+
+    let formData = new FormData();
+    formData.append("image", image);
+    formData.append("name", name);
+    formData.append("year", String(year));
+    formData.append("price", String(price));
+
     try {
-      const result = await apiWithAuth.post("/game", {
-        name,
-        year,
-        price,
+      const result = await apiWithAuth.post("/game", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       toast.success(result.data.message, { position: "top-center" });
       navigate("/");
@@ -42,11 +60,17 @@ const CreateGame = () => {
 
   const editGame = async () => {
     setLoading(true);
+
+    let formData = new FormData();
+    formData.append("image", image);
+    formData.append("name", name);
+    formData.append("year", String(year));
+    formData.append("price", String(price));
     try {
-      const result = await apiWithAuth.put(`/game/${gameState.id}`, {
-        name,
-        year,
-        price,
+      const result = await apiWithAuth.put(`/game/${gameState.id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       toast.success(result.data.message, { position: "top-center" });
       navigate("/");
@@ -58,7 +82,7 @@ const CreateGame = () => {
   };
 
   return (
-    <div className="container mx-auto mt-20">
+    <div className="container mx-auto mt-20 my-20">
       <div className="sm:flex justify-center mx-4">
         <div className="sm:max-w-screen-lg">
           <form>
@@ -118,7 +142,40 @@ const CreateGame = () => {
                   Preço
                 </label>
               </div>
+
+              <div className="w-full"></div>
             </div>
+            {file ? (
+              <img
+                className="w-full mb-10"
+                src={URL.createObjectURL(file)}
+                alt={file}
+              />
+            ) : (
+              image && (
+                <img
+                  className="w-full mb-10"
+                  src={`http://localhost:8080/image/${image}`}
+                  alt={file}
+                />
+              )
+            )}
+
+            <label
+              className="block mb-2 text-sm font-medium text-gray-900"
+              htmlFor="file_input"
+            >
+              Carregar foto
+            </label>
+            <input
+              className="block w-full  text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer"
+              id="file_input"
+              type="file"
+              onChange={upImage}
+            />
+            <p className="mt-1 text-sm text-gray-500" id="file_input_help">
+              PNG, JPG e JPEG.
+            </p>
             <div className="mt-2">
               <button
                 onClick={gameState ? editGame : createGame}
